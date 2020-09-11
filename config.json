@@ -1,0 +1,14 @@
+{
+  "images": [
+    {
+      "user": "linuxserver",
+      "image": "sickchill",
+      "tag": "latest"
+    },
+    {
+      "user": "linuxserver",
+      "image": "couchpotato",
+      "tag": "latest"
+    }
+  ]
+}
