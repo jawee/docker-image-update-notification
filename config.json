@@ -10,5 +10,6 @@
       "image": "couchpotato",
       "tag": "latest"
     }
-  ]
+  ],
+  "discord-webhook": "https://discordapp.com/api/webhooks/754069079169564714/hPZyTFlQwpTEudtIsPCX9Q6kZIIJmz--6y6gMRWhfkc9aHGUUo-Rvgz1jKK3TZwYlGr5"
 }
