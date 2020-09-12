@@ -1,10 +1,10 @@
 properties([pipelineTriggers([githubPush()])])
 
+  def app
   pipeline {
     agent any
 
       stages {
-        def app
           stage('Build image') {
             steps {
               app = docker.build("jawee/image-update-notification")
