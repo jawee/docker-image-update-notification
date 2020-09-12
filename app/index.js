@@ -6,6 +6,28 @@ const cachePath = '/usr/src/config/cache.json';
 
 let cache;
 
+const logFilePath = '/usr/src/config/log.json';
+
+let writeToLog = function(data) {
+  if(!fs.existsSync(logFilePath)) {
+    fs.writeFileSync(logFilePath, "", null);
+  }
+  let currTime = new Date();
+
+  fs.appendFileSync(logFilePath, "Debug " + currTime + " > " + JSON.stringify(data) + '\n');
+  console.log(currTime + " > " + JSON.stringify(data));
+}
+
+let writeErrorToLog = function(data) {
+  if(!fs.existsSync(logFilePath)) {
+    fs.writeFileSync(logFilePath, "", null);
+  }
+  let currTime = new Date();
+
+  fs.appendFileSync(logFilePath, "ERROR "  + currTime + " > " + JSON.stringify(data) + '\n');
+  console.error(currTime + " > " + JSON.stringify(data));
+}
+
 let writeToCache = function(data) {
   fs.writeFile(cachePath, JSON.stringify(data), () => {});
 }
@@ -34,7 +56,7 @@ var getImageInformation = function(imageConfig) {
       }
       imageConfig.last_updated = tagInfo.last_updated;
       resolve(imageConfig);
-    }).catch((err) => { console.error(err); reject(err) } );
+    }).catch((err) => { writeErrorToLog(err); reject(err) } );
   });
 }
 
@@ -55,14 +77,14 @@ let handleImages = function(imagesInfo) {
   const webhookClient = new Discord.WebhookClient(config.webhookId, config.webhookToken);
 
   imagesInfo.forEach((i) => {
-    console.log("Handling " + i.image);
+    writeToLog("Handling " + i.image);
     if(cache == null) {
-      console.log("Cache is null, add current info to cache");
+      writeToLog("Cache is null, add current info to cache");
       return;
     }
     let cachedImage = cache.filter((elem) => elem.image == i.image);
     if(cachedImage.length == 0) {
-      console.log("No cached image, add current info to cache");
+      writeToLog("No cached image, add current info to cache");
       return;
     }
     cachedImage = cachedImage[0];
@@ -70,11 +92,11 @@ let handleImages = function(imagesInfo) {
     if(new Date(cachedImage.last_updated) < new Date(i.last_updated)) {
       webhookClient.send("New image found for " + i.user + "/" + i.image + ":" + i.tag, { username: 'Image Updated', avatarURL: 'https://files.hellracers.se/Moby-logo.png' });
     } else {
-      console.log("No new image found for " + i.user + "/" + i.image + ":" + i.tag);
+      writeToLog("No new image found for " + i.user + "/" + i.image + ":" + i.tag);
     }
   });
   webhookClient.destroy();
-  console.log("done in handleImages");
+  writeToLog("done in handleImages");
   writeToCache(imagesInfo);
 }
 
