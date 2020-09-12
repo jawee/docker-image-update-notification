@@ -1,8 +1,9 @@
 const dockerApi = require('docker-hub-api');
 const fs = require('fs');
-const config = require('../config.json');
+const config = require('/usr/src/config/config.json');
 const Discord = require('discord.js');
-const cachePath = './cache/cache.json';
+const cachePath = '/usr/src/config/cache.json';
+
 let cache;
 
 let writeToCache = function(data) {
@@ -36,7 +37,6 @@ let getImageInformations = function() {
   return new Promise((resolve, reject) => {
     let requests = [];
     config.images.forEach(i => {
-      console.log("adding " + i.image + " to requests");
       requests.push(getImageInformation(i));
     }); 
 
@@ -64,6 +64,8 @@ let handleImages = function(imagesInfo) {
 
     if(new Date(cachedImage.last_updated) < new Date(i.last_updated)) {
       webhookClient.send("New image found for " + i.user + "/" + i.image + ":" + i.tag);
+    } else {
+      console.log("No new image found for " + i.user + "/" + i.image + ":" + i.tag);
     }
   });
   webhookClient.destroy();
@@ -76,5 +78,11 @@ getImageInformations().then(res => {
   handleImages(res); 
 });
 
-
+//TODO 1: Change to check once an hour
+setInterval(() => { 
+  initApplication();
+  getImageInformations().then(res => { 
+    handleImages(res); 
+  });
+}, 60*1000*60);
 

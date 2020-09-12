@@ -1,6 +1,6 @@
 {
   "name": "docker-image-notification",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "npm app for seeing if there's a new image on dockerhub and notifies you if there is.",
   "main": "index.js",
   "scripts": {
