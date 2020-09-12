@@ -68,7 +68,7 @@ let handleImages = function(imagesInfo) {
     cachedImage = cachedImage[0];
 
     if(new Date(cachedImage.last_updated) < new Date(i.last_updated)) {
-      webhookClient.send("New image found for " + i.user + "/" + i.image + ":" + i.tag);
+      webhookClient.send("New image found for " + i.user + "/" + i.image + ":" + i.tag, { username: 'Image Updated', avatarURL: 'https://files.hellracers.se/Moby-logo.png' });
     } else {
       console.log("No new image found for " + i.user + "/" + i.image + ":" + i.tag);
     }
