@@ -1,15 +1,20 @@
 const dockerApi = require('docker-hub-api');
 const fs = require('fs');
 const config = require('../config.json');
+const Discord = require('discord.js');
+const cachePath = './cache/cache.json';
+let cache;
 
-let writeToCache = function(user, image, tag, date) {
-  // TODO 1: Figure out format
-  fs.writeFile("./cache/cache.json", image + date, (err) => { console.log(err); });
+let writeToCache = function(data) {
+  fs.writeFile(cachePath, JSON.stringify(data), () => {});
 }
 
 let initApplication = function() {
   dockerApi.setCacheOptions({enabled: true, time:60});
-  // TODO 1: Read cache
+  if(!fs.existsSync(cachePath)) {
+    fs.writeFileSync(cachePath, null, null);
+  }
+  cache = JSON.parse(fs.readFileSync(cachePath, 'utf-8'));
 }
 
 var getImageInformation = function(imageConfig) {
@@ -31,6 +36,7 @@ let getImageInformations = function() {
   return new Promise((resolve, reject) => {
     let requests = [];
     config.images.forEach(i => {
+      console.log("adding " + i.image + " to requests");
       requests.push(getImageInformation(i));
     }); 
 
@@ -40,10 +46,35 @@ let getImageInformations = function() {
   });
 }
 
+let handleImages = function(imagesInfo) {
+  const webhookClient = new Discord.WebhookClient(config.webhookId, config.webhookToken);
 
+  imagesInfo.forEach((i) => {
+    console.log("Handling " + i.image);
+    if(cache == null) {
+      console.log("Cache is null, add current info to cache");
+      return;
+    }
+    let cachedImage = cache.filter((elem) => elem.image == i.image);
+    if(cachedImage.length == 0) {
+      console.log("No cached image, add current info to cache");
+      return;
+    }
+    cachedImage = cachedImage[0];
+
+    if(new Date(cachedImage.last_updated) < new Date(i.last_updated)) {
+      webhookClient.send("New image found for " + i.user + "/" + i.image + ":" + i.tag);
+    }
+  });
+  webhookClient.destroy();
+  console.log("done in handleImages");
+  writeToCache(imagesInfo);
+}
 
 initApplication();
-getImageInformations().then(res => { });
+getImageInformations().then(res => { 
+  handleImages(res); 
+});
 
 
 
