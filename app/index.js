@@ -43,5 +43,7 @@ let getImageInformations = function() {
 
 
 initApplication();
-getImageInformations().then(res => { imageInfos = res });
+getImageInformations().then(res => { });
+
+
 
