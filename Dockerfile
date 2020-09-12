@@ -6,4 +6,4 @@ COPY ./app /usr/src/app
 
 RUN npm install
 
-CMD node index.js
+CMD node index.js > /usr/src/config/log.json
