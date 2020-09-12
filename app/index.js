@@ -13,9 +13,14 @@ let writeToCache = function(data) {
 let initApplication = function() {
   dockerApi.setCacheOptions({enabled: true, time:60});
   if(!fs.existsSync(cachePath)) {
-    fs.writeFileSync(cachePath, null, null);
+    fs.writeFileSync(cachePath, "", null);
   }
-  cache = JSON.parse(fs.readFileSync(cachePath, 'utf-8'));
+  cacheFile = fs.readFileSync(cachePath, 'utf-8');
+  if(cacheFile == null || cacheFile == "") {
+    cache = null;
+  } else {
+    cache = JSON.parse(cacheFile);
+  }
 }
 
 var getImageInformation = function(imageConfig) {

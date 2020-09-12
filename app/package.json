@@ -2,6 +2,7 @@
   "name": "docker-image-notification",
   "version": "1.0.0",
   "description": "npm app for seeing if there's a new image on dockerhub and notifies you if there is.",
+  "repository": "https://github.com/jawee/docker-image-update-notification",
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js"
