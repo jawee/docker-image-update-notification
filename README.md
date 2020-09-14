@@ -1,5 +1,7 @@
 # Docker Image Notification
 
+Image can be found here https://hub.docker.com/r/jawee/image-update-notification
+
 Notifies a discord channel when one of the images you're using is updated
 
 Add a config to your specified config directory
