@@ -1,5 +1,3 @@
-properties([pipelineTriggers([githubPush()])])
-
   def app
   pipeline {
     agent any
