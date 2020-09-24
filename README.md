@@ -44,4 +44,3 @@ version: '3'
   volumes:
     - ./config:/usr/src/config
 ```
-
