@@ -52,6 +52,7 @@ var getImageInformation = function(imageConfig) {
       if(tagInfo.length > 0) {
         tagInfo = tagInfo[0];
       } else {
+        //TODO 1: Should probably not be a resolve, should be a reject. But Promise.all needs to be replaced
         writeToLog("resolving null for " + imageConfig.user + "/" + imageConfig.image + ":" + imageConfig.tag);
         resolve(null);
         //reject("taginfo.length is 0 for " + imageConfig.user + "/" + imageConfig.image + ":" + imageConfig.tag);
