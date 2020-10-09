@@ -33,6 +33,8 @@ let writeToCache = function(data) {
 }
 
 let initApplication = function() {
+
+  console.log("In init application");
   dockerApi.setCacheOptions({enabled: true, time:60});
   if(!fs.existsSync(cachePath)) {
     fs.writeFileSync(cachePath, "", null);
@@ -100,6 +102,7 @@ let handleImages = function(imagesInfo) {
   writeToCache(imagesInfo);
 }
 
+console.log("Application started");
 initApplication();
 getImageInformations().then(res => { 
   handleImages(res); 
