@@ -103,6 +103,7 @@ let handleImages = function(imagesInfo) {
       newImagesInfo.push(i);
     } else {
       writeToLog("No new image found for " + i.user + "/" + i.image + ":" + i.tag);
+      newImagesInfo.push(i);
     }
   });
   webhookClient.destroy();
