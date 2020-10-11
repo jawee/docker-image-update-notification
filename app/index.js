@@ -1,11 +1,14 @@
 const dockerApi = require('docker-hub-api');
 const fs = require('fs');
-const config = require('/usr/src/config/config.json');
+const config = require('./config/config.json');
+//const config = require('/usr/src/config/config.json');
 const Discord = require('discord.js');
-const cachePath = '/usr/src/config/cache.json';
+const cachePath = './config/cache.json';
+//const cachePath = '/usr/src/config/cache.json';
 let cache;
 
-const logFilePath = '/usr/src/config/log.json';
+const logFilePath = './config/log.json';
+//const logFilePath = '/usr/src/config/log.json';
 
 let writeToLog = function(data) {
   if(!fs.existsSync(logFilePath)) {
@@ -91,13 +94,14 @@ let handleImages = function(imagesInfo) {
       newImagesInfo.push(i);
       return;
     }
-    let cachedImage = cache.filter((elem) => elem.image == i.image);
+    let cachedImage = cache.filter((elem) => elem.image == i.image && elem.user == i.user);
     if(cachedImage.length == 0) {
       writeToLog("No cached image, add current info to cache");
       newImagesInfo.push(i);
       return;
     }
     cachedImage = cachedImage[0];
+    console.log(i.user + "/" + i.image + " = " + cachedImage.user + "/" + cachedImage.image);
     if(new Date(cachedImage.last_updated) < new Date(i.last_updated)) {
       webhookClient.send("New image found for " + i.user + "/" + i.image + ":" + i.tag, { username: 'Image Updated', avatarURL: 'https://files.hellracers.se/Moby-logo.png' });
       newImagesInfo.push(i);
