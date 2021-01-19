@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.3.1",
-    "docker-hub-api": "^0.8.0",
+    "docker-hub-api": "^0.0.1",
     "fs": "0.0.1-security"
   }
 }
