@@ -37,7 +37,7 @@ docker build --tag image-update-notification:1.0 .
 
 ```yml
 version: '3'
-  services:
+services:
   docker-image-notification:
   image:  jawee/image-update-notification:latest
   restart: unless-stopped
