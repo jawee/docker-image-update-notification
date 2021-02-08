@@ -1,11 +1,12 @@
 const dockerApi = require('docker-hub-api');
 const fs = require('fs');
-const config = require('/usr/src/config/config.json');
+const basePath = '/usr/src/config/';
+const config = require(basePath + 'config.json');
 const Discord = require('discord.js');
-const cachePath = '/usr/src/config/cache.json';
+const cachePath = basePath + 'cache.json';
 let cache;
 
-const logFilePath = '/usr/src/config/log.json';
+const logFilePath = basePath + 'log.json';
 
 let writeToLog = function(data) {
   if(!fs.existsSync(logFilePath)) {
