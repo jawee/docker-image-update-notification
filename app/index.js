@@ -74,7 +74,6 @@ var getImageInformation = function(imageConfig) {
         owner: imageConfig.user,
         repo: imageConfig.image
       }).then((res) => {
-        console.log(res);
         if(res.status === 200) {
           imageConfig.last_updated = res.data.published_at;
           resolve(imageConfig);
