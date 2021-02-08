@@ -3,8 +3,11 @@ const fs = require('fs');
 const basePath = '/usr/src/config/';
 const config = require(basePath + 'config.json');
 const Discord = require('discord.js');
+const { Octokit } = require("@octokit/core");
 const cachePath = basePath + 'cache.json';
 let cache;
+
+const octokit = new Octokit(); //({ auth: `personal-access-token123` });
 
 const logFilePath = basePath + 'log.json';
 
@@ -47,21 +50,37 @@ let initApplication = function() {
 
 var getImageInformation = function(imageConfig) {
   return new Promise((resolve, reject) => {
-    dockerApi.tags(imageConfig.user, imageConfig.image).then((tags) => {
-      writeToLog("inside dockerApi got tag info for " + imageConfig.user + "/" + imageConfig.image + ":" + imageConfig.tag);
-      let tagInfo = tags.filter((t) => t.name == imageConfig.tag );
-      if(tagInfo.length > 0) {
-        tagInfo = tagInfo[0];
-      } else {
-        //TODO 1: Should probably not be a resolve, should be a reject. But Promise.all needs to be replaced
-        writeToLog("resolving null for " + imageConfig.user + "/" + imageConfig.image + ":" + imageConfig.tag);
-        resolve(null);
-        //reject("taginfo.length is 0 for " + imageConfig.user + "/" + imageConfig.image + ":" + imageConfig.tag);
-      }
-      imageConfig.last_updated = tagInfo.last_updated;
-      writeToLog("resolving imageConfig in getImageInformation for image " + imageConfig.user + "/" + imageConfig.image + ":" + imageConfig.tag);
-      resolve(imageConfig);
-    }).catch((err) => { writeErrorToLog(err); reject(err) } );
+    if(imageConfig.registry === 'docker') {
+      dockerApi.tags(imageConfig.user, imageConfig.image).then((tags) => {
+        writeToLog("inside dockerApi got tag info for " + imageConfig.user + "/" + imageConfig.image + ":" + imageConfig.tag);
+        let tagInfo = tags.filter((t) => t.name == imageConfig.tag );
+        if(tagInfo.length > 0) {
+          tagInfo = tagInfo[0];
+        } else {
+          //TODO 1: Should probably not be a resolve, should be a reject. But Promise.all needs to be replaced
+          writeToLog("resolving null for " + imageConfig.user + "/" + imageConfig.image + ":" + imageConfig.tag);
+          resolve(null);
+          //reject("taginfo.length is 0 for " + imageConfig.user + "/" + imageConfig.image + ":" + imageConfig.tag);
+        }
+        imageConfig.last_updated = tagInfo.last_updated;
+        console.log(tagInfo.last_updated);
+        writeToLog("resolving imageConfig in getImageInformation for image " + imageConfig.user + "/" + imageConfig.image + ":" + imageConfig.tag);
+        resolve(imageConfig);
+      }).catch((err) => { writeErrorToLog(err); reject(err) } );
+    } else if(imageConfig.registry === 'github') {
+      octokit.request("GET /repos/{owner}/{repo}/releases/latest", {
+        owner: imageConfig.user,
+        repo: imageConfig.image
+      }).then((res) => {
+        console.log(res);
+        if(res.status === 200) {
+          imageConfig.last_updated = res.data.published_at;
+          resolve(imageConfig);
+        } else {
+          resolve(null);
+        }
+      }).catch((err) => { writeErrorToLog(err); reject(err) });
+    }
   });
 }
 
@@ -101,7 +120,7 @@ let handleImages = function(imagesInfo) {
     cachedImage = cachedImage[0];
     console.log(i.user + "/" + i.image + " = " + cachedImage.user + "/" + cachedImage.image);
     if(new Date(cachedImage.last_updated) < new Date(i.last_updated)) {
-      webhookClient.send("New image found for " + i.user + "/" + i.image + ":" + i.tag, { username: 'Image Updated', avatarURL: 'https://files.hellracers.se/Moby-logo.png' });
+      webhookClient.send("New image found for " + i.user + "/" + i.image + ":" + i.tag + " on " + i.registry, { username: 'Image Updated', avatarURL: 'https://files.hellracers.se/Moby-logo.png' });
       newImagesInfo.push(i);
     } else {
       writeToLog("No new image found for " + i.user + "/" + i.image + ":" + i.tag);

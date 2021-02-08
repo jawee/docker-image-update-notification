@@ -5,12 +5,14 @@
     {
       "user": "linuxserver",
       "image": "sickchill",
-      "tag": "latest"
+      "tag": "latest",
+      "registry": "github"
     },
     {
       "user": "linuxserver",
       "image": "couchpotato",
-      "tag": "latest"
+      "tag": "latest",
+      "registry": "docker"
     }
   ]
 }
