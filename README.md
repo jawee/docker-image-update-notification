@@ -11,16 +11,19 @@ Example:
 {
   "webhookId": "yourWebhookIdHere",
   "webhookToken": "yourWebhookTokenHere",
+  "github_access_token": "yourAccessTokenHere",
   "images": [
     {
       "user": "linuxserver",
-      "image": "sickchill",
-      "tag": "latest"
+      "image": "docker-radarr",
+      "tag": "latest",
+      "registry": "github"
     },
     {
       "user": "linuxserver",
       "image": "couchpotato",
-      "tag": "latest"
+      "tag": "latest",
+      "registry": "docker"
     }
   ]
 }
