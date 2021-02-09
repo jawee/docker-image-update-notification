@@ -4,7 +4,7 @@
   "images": [
     {
       "user": "linuxserver",
-      "image": "sickchill",
+      "image": "docker-radarr",
       "tag": "latest",
       "registry": "github"
     },
