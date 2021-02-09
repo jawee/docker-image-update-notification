@@ -7,7 +7,7 @@ const { Octokit } = require("@octokit/core");
 const cachePath = basePath + 'cache.json';
 let cache;
 
-const octokit = new Octokit(); //({ auth: `personal-access-token123` });
+let octokit;
 
 const logFilePath = basePath + 'log.json';
 
@@ -46,6 +46,8 @@ let initApplication = function() {
   } else {
     cache = JSON.parse(cacheFile);
   }
+
+  octokit = new Octokit({ auth: config.github_access_token });
 }
 
 var getImageInformation = function(imageConfig) {
@@ -72,7 +74,6 @@ var getImageInformation = function(imageConfig) {
         owner: imageConfig.user,
         repo: imageConfig.image
       }).then((res) => {
-        console.log(res);
         if(res.status === 200) {
           imageConfig.last_updated = res.data.published_at;
           resolve(imageConfig);

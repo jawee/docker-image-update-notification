@@ -1,6 +1,7 @@
 {
   "webhookId": "yourWebhookIdHere",
   "webhookToken": "yourWebhookTokenHere",
+  "github_access_token": "yourAccessTokenHere",
   "images": [
     {
       "user": "linuxserver",
