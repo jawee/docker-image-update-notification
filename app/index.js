@@ -50,7 +50,7 @@ let initApplication = function() {
   octokit = new Octokit({ auth: config.github_access_token });
 }
 
-var getImageInformation = function(imageConfig) {
+let getImageInformation = function(imageConfig) {
   return new Promise((resolve, reject) => {
     if(imageConfig.registry === 'docker') {
       dockerApi.tags(imageConfig.user, imageConfig.image).then((tags) => {
