@@ -1,5 +1,5 @@
 # Docker Image Notification
-[![Build Status](http://jenkins.home.jawee.se/job/docker-image-update-notification/job/master/badge/icon?style=flat-square)](http://jenkins.home.jawee.se/job/docker-image-update-notification/job/master/)
+[![Build Status](http://jenkins.home.jawee.se/buildStatus/icon?job=docker-image-update-notification%2Fmaster)](http://jenkins.home.jawee.se/job/docker-image-update-notification/job/master/)
 
 Image can be found here https://hub.docker.com/r/jawee/image-update-notification
 
