@@ -9,9 +9,14 @@ let cache;
 
 let octokit;
 
-const logFilePath = basePath + 'log.json';
-
+let getLogFile = function() {
+  const date = new Date();
+  const dateString = date.toISOString().substr(0,10);
+  const logFile = basePath + 'log-' + dateString + '.json';
+  return logFile;
+}
 let writeToLog = function(data) {
+  const logFilePath = getLogFile();
   if(!fs.existsSync(logFilePath)) {
     fs.writeFileSync(logFilePath, "", null);
   }
@@ -22,6 +27,7 @@ let writeToLog = function(data) {
 }
 
 let writeErrorToLog = function(data) {
+  const logFilePath = getLogFile();
   if(!fs.existsSync(logFilePath)) {
     fs.writeFileSync(logFilePath, "", null);
   }
@@ -50,7 +56,7 @@ let initApplication = function() {
   octokit = new Octokit({ auth: config.github_access_token });
 }
 
-var getImageInformation = function(imageConfig) {
+let getImageInformation = function(imageConfig) {
   return new Promise((resolve, reject) => {
     if(imageConfig.registry === 'docker') {
       dockerApi.tags(imageConfig.user, imageConfig.image).then((tags) => {
